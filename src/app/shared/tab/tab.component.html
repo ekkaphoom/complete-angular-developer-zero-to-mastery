@@ -1,0 +1,8 @@
+<!-- <div [class.hidden]="!active"> -->
+<div
+  [ngClass]="{
+    hidden: !active
+  }"
+>
+  <ng-content></ng-content>
+</div>
