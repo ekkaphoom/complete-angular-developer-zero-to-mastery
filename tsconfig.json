@@ -23,7 +23,7 @@
       "es2020",
       "dom"
     ],
-    // "noPropertyAccessFromIndexSignature":false
+    "noPropertyAccessFromIndexSignature":false,
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
