@@ -18,6 +18,10 @@ export class RegisterComponent {
   ]);
   phoneNumber = new FormControl('');
 
+  showAlert: boolean = false;
+  alertMsg: string = 'Please wait! Your account is being created.';
+  alertColor: string = 'blue';
+
   registerForm = new FormGroup({
     name: this.name,
     email: this.email,
@@ -26,4 +30,10 @@ export class RegisterComponent {
     age: this.age,
     phoneNumber: this.phoneNumber,
   });
+
+  register() {
+    this.showAlert = true;
+    this.alertMsg = 'Please wait! Your account is being created.';
+    this.alertColor = 'blue';
+  }
 }
