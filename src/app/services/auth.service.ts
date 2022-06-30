@@ -1,0 +1,61 @@
+import { Injectable } from '@angular/core';
+import { AngularFireAuth } from '@angular/fire/compat/auth';
+import {
+  AngularFirestore,
+  AngularFirestoreCollection,
+} from '@angular/fire/compat/firestore';
+import { Observable } from 'rxjs';
+import IUser from '../models/IUser';
+import { delay, filter, map } from 'rxjs/operators';
+import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
+
+@Injectable({
+  providedIn: 'root',
+})
+export class AuthService {
+  private usersCollection: AngularFirestoreCollection<IUser>;
+  public isAuthentication$: Observable<boolean>;
+
+  constructor(
+    private auth: AngularFireAuth,
+    private db: AngularFirestore,
+    private router: Router,
+    private route: ActivatedRoute
+  ) {
+    this.usersCollection = db.collection('users');
+    this.isAuthentication$ = auth.user.pipe(delay(1000)).pipe(map((x) => !!x));
+    this.router.events
+      .pipe(
+        filter((e) => e instanceof NavigationEnd), //
+        map((e) => this.route.firstChild) //
+      )
+      .subscribe(console.log);
+  }
+
+  public async createUser(userData: IUser) {
+    const userCredential = await this.auth.createUserWithEmailAndPassword(
+      userData.email as string,
+      userData.password as string
+    );
+
+    await this.usersCollection.doc(userCredential.user?.uid).set({
+      name: userData.name,
+      email: userData.email,
+      age: userData.age,
+      phoneNumber: userData.phoneNumber,
+      password: userData.password,
+    });
+
+    await userCredential.user?.updateProfile({
+      displayName: userData.name,
+    });
+  }
+
+  public async logout($event?: Event) {
+    if ($event) {
+      $event.preventDefault();
+    }
+    await this.auth.signOut();
+    await this.router.navigateByUrl('/');
+  }
+}

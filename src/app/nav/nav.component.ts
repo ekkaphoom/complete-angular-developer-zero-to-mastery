@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { AngularFireAuth } from '@angular/fire/compat/auth';
+import { AuthService } from '../services/auth.service';
 import { ModalService } from '../services/modal.service';
 
 @Component({
@@ -7,7 +9,11 @@ import { ModalService } from '../services/modal.service';
   styleUrls: ['./nav.component.css'],
 })
 export class NavComponent implements OnInit {
-  constructor(public modal: ModalService) {}
+  constructor(
+    public modal: ModalService,
+    public auth: AuthService,
+    private af: AngularFireAuth
+  ) {}
 
   ngOnInit(): void {}
 
